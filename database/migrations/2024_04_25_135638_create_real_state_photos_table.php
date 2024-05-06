@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('real_state_photos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('real_state_id')->references('id')->on('real_state');
+            $table->foreignId('real_state_id')->references('id')->on('real_state')->onDelete('cascade');
             
             $table->string('photo', 255);
             $table->boolean('is_thumb');

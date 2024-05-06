@@ -14,6 +14,6 @@ class RealStatePhoto extends Model
     ];
 
     public function RealState(){
-        return $this->belongsTo( RealState::class)->onDelete('cascade');
+        return $this->belongsTo( RealState::class);
     }
 }

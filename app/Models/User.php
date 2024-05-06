@@ -47,7 +47,7 @@ class User extends Authenticatable implements JWTSubject
     }
 
     public function property(){
-        return $this->hasMany(RealState::class)->onDelete('cascade');
+        return $this->hasMany(RealState::class);
     }
 
     public function profile(){
