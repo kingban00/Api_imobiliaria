@@ -17,8 +17,10 @@ class RealStateController extends Controller
 
     public function index(){
         try{
-            $realState = $this->realState->paginate('10');
-            return response()->json($realState, 200);
+            // $realState = $this->realState->paginate('10');
+            // dd(auth()->user());
+            $realState = auth()->user()->property();
+            return response()->json($realState->paginate(10), 200);
         } catch(\Exception $e){
             $message = new ApiMessages($e->getMessage(), $e->getCode());
             return response()->json($message->getMessage(), 404);
@@ -28,7 +30,7 @@ class RealStateController extends Controller
 
     public function show($id){
         try{
-            $realState = RealState::with('photos')->findOrFail($id);
+            $realState = auth()->user()->property()->with('photos')->findOrFail($id);
             return response()->json($realState,200);
         } catch(\Exception $e){
             $message = new ApiMessages($e->getMessage(), $e->getCode());
@@ -39,6 +41,7 @@ class RealStateController extends Controller
     public function store(RealStateRequest $request){
 
         $data = $request->all();
+        $data['user_id'] = auth()->user()->id;
         $images = $request->file('images');
 
         try {
@@ -69,11 +72,12 @@ class RealStateController extends Controller
 
     public function update($id, RealStateRequest $request){
         $data = $request->all();
+        $data['user_id'] = auth()->user()->id;
         $images = $request->file('images');
 
 
         try {
-            $realState = RealState::findOrFail($id);
+            $realState = auth()->user()->property()->findOrFail($id);
             $realState->update($data);
             if(isset($data['categories']) && count($data['categories'])){
                 $realState->categories()->sync($data['categories']);
@@ -99,7 +103,7 @@ class RealStateController extends Controller
 
     public function destroy($id){
         try {
-            $realState = RealState::findOrFail($id);
+            $realState = auth()->user()->property()->findOrFail($id);
             $realState->delete();
             return response()->json([ 'msg', 'Imóvel deletado com sucesso']);
         } catch (\Throwable $th) {
